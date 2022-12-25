@@ -1,0 +1,15 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host:     <%= ENV.fetch('MYSQL_HOST')     { "db" } %>
+  username: <%= ENV.fetch('MYSQL_USER')     { "root" } %>
+  password: <%= ENV.fetch('MYSQL_PASSWORD') { "" } %>
+
+development:
+  <<: *default
+  database: clomo_manage_customer_build_development
+
+test:
+  <<: *default
+  database: clomo_manage_customer_build_test

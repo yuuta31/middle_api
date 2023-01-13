@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: end-api
+  version: '1.0'
+  contact:
+    name: '勉強会用'
+  description: 勉強会用です
+servers:
+  - url: 'http://localhost:80'
+paths:
+  '/{project_id}':
+    parameters:
+      - schema:
+          type: string
+          maxLength: 40
+        name: project_id
+        in: path
+        required: true
+    get:
+      summary: プロジェクト情報取得
+      responses:
+        '200':
+          description: Project Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: なまえ
+                    description: せつめい
+        '404':
+          description: Project Not Found 
+      operationId: get-project
+      description: get an existing project
+    patch:
+      summary: プロジェクト一部パラメータ更新用
+      operationId: patch-project
+      responses:
+        '200':
+          description: Project Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: なまえ
+                    description: せつめい
+        '404':
+          description: Project Not Found
+      description: Update the some information of an existing project.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectRequest'
+            examples:
+              example-1:
+                value:
+                  name: なまえ修正後
+        description: Patch project properties to update.
+    put:
+      summary: プロジェクト全パラメータ更新用
+      operationId: put-project
+      responses:
+        '200':
+          description: Project Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: なまえ
+                    description: せつめい
+        '404':
+          description: Project Not Found
+      description: Update the information of an existing project.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ProjectRequest'
+                - type: object
+                  required:
+                    - project
+                  properties:
+                    project:
+                      type: object
+                      required:
+                        - name
+                        - description
+            examples:
+              example-1:
+                value:
+                  name: なまえ
+                  description: せつめい
+        description: Patch project properties to update.
+  /projects:
+    post:
+      summary: プロジェクト新規作成
+      operationId: post-project
+      responses:
+        '200':
+          description: Project Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: なまえ
+                    description: せつめい
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Project Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ProjectRequest'
+                - type: object
+                  required:
+                    - project
+                  properties:
+                    project:
+                      type: object
+                      required:
+                        - name
+                        - description
+            examples:
+              example-1:
+                value:
+                  name: なまえ
+                  description: せつめい
+        description: Post the necessary fields for the API to create a new project.
+      description: Create a new project.
+    parameters: []
+components:
+  schemas:
+    Project:
+      title: Project
+      type: object
+      description: ''
+      x-examples:
+        example-1:
+          value:
+            id: 1
+            name: なまえ
+            description: せつめい
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given project.
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - description
+    ProjectRequest:
+      title: ProjectRequest
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          value:
+            project:
+              name: なまえ
+              description: せつめい
+      properties:
+        project:
+          type: object
+          properties:
+            name:
+              type: string
+            description:
+              type: string

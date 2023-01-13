@@ -38,6 +38,23 @@ services:
     stdin_open: true
     ports:
       - "3000:3000"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui-end"
+    ports:
+      - "10085:8080"
+    volumes:
+      - ./docs/server/mock_api.yml:/mock_api.yml
+    environment:
+      SWAGGER_JSON: /mock_api.yml
+  swagger-api:
+    image: stoplight/prism:3
+    container_name: "swagger-api-end"
+    ports:
+      - "10086:4010"
+    command: mock -h 0.0.0.0 /docs/server/mock_api.yml
+    volumes:
+      - ./docs/server/mock_api.yml:/docs/server/mock_api.yml
 
 volumes:
   db-data:

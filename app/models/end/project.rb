@@ -10,13 +10,10 @@ module End
 
     validates :name, presence: true
     validates :description, presence: true
-
-    before_validation :check_and_raise_name
+    validate :check_and_raise_name
 
     BANNED_WORDS = ["放送禁止用語1", "放送禁止用語2", "放送禁止用語3"]
     DISCRIMINATION_WORDS = ["差別用語1", "差別用語2", "差別用語3"]
-
-    def self.call(...) = new(...)
 
     def find
       project = End::Api::V1::Project.get_with_options(project_id: id) if id.presence
@@ -35,12 +32,21 @@ module End
     private
 
     def find_by = End::Api::V1::Project.get_with_options(project_id: id)
-    def params = { project: { name: name, description: description, }.compact }
+
     def create! = End::Api::V1::Project.create_with_options(params)
 
     def update!(project)
       update_params = { project: project }.merge(params)
       End::Api::V1::Project.update_with_options(update_params, project_id: id)
+    end
+
+    def params
+      {
+        project: {
+          name: name,
+          description: description
+        }.compact
+      }
     end
 
     def check_and_raise_name

@@ -1,5 +1,6 @@
 require 'faraday'
 
+# FIXME: concernに移行
 module End
   module Api
     module V1

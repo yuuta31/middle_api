@@ -1,7 +1,6 @@
 class Api::V1::ProjectsController < ApplicationController
   def create
-    project = End::Project.call(project_params.to_hash)
-    project.save!
+    End::Project.new(project_params.to_hash).save!
     render body: nil, status: :ok
   rescue StandardError => e
     logger.debug(e)
@@ -11,8 +10,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def update
-    project = End::Project.call(project_params.to_h.merge({ id: params["id"] }))
-    project.save!
+    End::Project.new(project_params.to_h.merge({ id: params["id"] })).save!
     render body: nil, status: :ok
   rescue StandardError => e
     logger.debug(e)
@@ -22,9 +20,7 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
   def show
-    project = End::Project.call({ id: params[:id] })
-    project = project.find
-    render json: project
+    render json: End::Project.new({ id: params[:id] }).find
   rescue StandardError => e
     logger.debug(e)
     render body: nil, status: :not_found and return unless e.message
